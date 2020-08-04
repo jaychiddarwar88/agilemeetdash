@@ -11,7 +11,7 @@ public class emailhandler {
     Email from = new Email("jjsschiddarwar@gmail.com");
     String subject = "You have new task from VSOFT Agile Meeting Dashboard";
     Email to = new Email(emailto);
-    Content content = new Content("text/plain", "<h3>Here is link to your new task</h3><p><a href='localhost:8080/agilemeetdash/'> Click here to see </a></p>");
+    Content content = new Content("text/html", "<h3>Here is link to your new task</h3><p><a href='localhost:8080/agilemeetdash/'> Click here to see </a></p>");
     Mail mail = new Mail(from, subject, to, content);
 
     SendGrid sg = new SendGrid(apikey);

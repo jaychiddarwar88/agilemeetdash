@@ -34,11 +34,12 @@ public class ajaxassigntask extends HttpServlet{
 			Connection conn = databaseconn.initializeDatabase();
 			Statement stmt= conn.createStatement();
 			
-			PreparedStatement st = conn.prepareStatement("insert into assignedtask values(?, ?, ?, ?)"); 
+			PreparedStatement st = conn.prepareStatement("insert into assignedtask values(?, ?, ?, ?, ?)"); 
 			st.setString(1, channelname );
 			st.setString(2, memberemail);
 			st.setString(3, taskid);
 			st.setString(4, newdate);
+			st.setString(5, "pending");
 			st.executeUpdate(); 
 			
 			out.println("assigned to : " + memberemail);

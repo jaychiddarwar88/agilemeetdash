@@ -27,11 +27,9 @@ import org.hibernate.service.ServiceRegistryBuilder;
 public class loginuser extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		boolean loginres = false;
-		String dbpass = "";
 		String username = "" ;
 		HttpSession session = req.getSession();
 		ArrayList<String> channellist = new ArrayList<String>();
-		String haschannel = "no" ;
 		
 		try {
 			Connection conn = databaseconn.initializeDatabase();
@@ -39,28 +37,12 @@ public class loginuser extends HttpServlet {
 			String sql = "SELECT * from userdetail " ;
 		    ResultSet rs = stmt.executeQuery(sql);
 		    
-		    
 		    while(rs.next()) {
 		    	if( rs.getString(3).equals(req.getParameter("email")) && rs.getString(4).equals(req.getParameter("password") )) {
 		    		username = rs.getString(2);
 		    		loginres = true;
 		    	}
-		    }
-			
-		    if(loginres) {
-		    	Statement stmt1= conn.createStatement();
-		    	String sql1 = "SELECT * from channelmember where memberemail = '"  + req.getParameter("email") + "'";
-			    ResultSet rs1 = stmt1.executeQuery(sql1);
-
-			    while(rs1.next()) {
-			    		channellist.add(rs1.getString(1));
-			    		haschannel = "yes" ;
-			    	}
-			    req.setAttribute("haschannel", haschannel);
-			    req.setAttribute("channellist", channellist);
-		    }
-		    
-		    
+		    }		    
 		    
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -72,8 +54,7 @@ public class loginuser extends HttpServlet {
 			session.setAttribute("email", req.getParameter("email"));
 			session.setAttribute("username", username);
 			session.setAttribute("exists", "f");
-			req.getRequestDispatcher("html/dash.jsp").forward(req, res);
-			
+			res.sendRedirect("/agilemeetdash/");
 			
 		}
 		else {

@@ -107,25 +107,24 @@
         		<div style="margin-top: 56px;"></div>
               	<h2 class="heading">Agile Meeting Dashboard</h2>
               	<div style="margin : 30px">
-              		create / select channel from sidebar
-              		
-              		add your dashboard here
+              		<h3>Tracker </h3>
+              		<p>Tracker task of all members</p>
               		<div id ="varcontent">
               			<div id = "varoverdue">
-              				<h3>Your Overdue Tasks</h3>
-              				<p>You have not Overdue task</p>
+              				<h3>Overdue Tasks</h3>
+              				<p>No Overdue task</p>
               			</div>
               			<div id = "varcompleted">
-              				<h3>Your Completed Tasks</h3>
-              				<p>You have not Completed task</p>
+              				<h3>Completed Tasks</h3>
+              				<p>No Completed task</p>
               			</div>
               			<div id = "varreview">
-              				<h3>Your Review Tasks</h3>
-              				<p>You have not Review task</p>
+              				<h3>Review Tasks</h3>
+              				<p>No Review task</p>
               			</div>
               			<div id = "varpending">
-              				<h3>Your Pending Tasks</h3>
-              				<p>You have not Pending task</p>
+              				<h3>Pending Tasks</h3>
+              				<p>No Pending task</p>
               			</div>
               		</div>
               	</div>
@@ -199,6 +198,9 @@
         	//console.log(obj);
         	//console.log(note);
         	//console.log("end");
+        	var assignedto = obj.memberemail ;
+        	var asignedtodom = document.createElement("h5");
+        	asignedtodom.innerHTML = "This task is assigned to : " + assignedto ;
         	
         	var title = document.createElement("h4");
         	title.innerHTML = note.title ;
@@ -218,6 +220,7 @@
         	var duedatedom = document.createElement("p");
         	duedatedom.innerHTML = "Due date is : " + duedate;
         	
+        	//datechecker
         	var from = duedate.split("/");
         	var taskdate = new Date(from[2], from[1] - 1, from[0]);
         	
@@ -234,6 +237,7 @@
 	    	pele.innerHTML = note.msgvalue;
 	    	divele.append(pele);
 	    	divele.append(newpele);
+	    	divele.append(asignedtodom);
 	    	divele.append(duedatedom);
 	    	divele.append(document.createElement("p"));
 	    	
@@ -243,23 +247,18 @@
 	    		varoverdue.append(divele);
 	    	}
 	    	else{
-	    	
 				if(obj.status == ("completed")){
 					console.log("completed");   
 					varcompleted.querySelector("p").remove();
 					varcompleted.append(divele);
 				}
 				if(obj.status == ("review")){
-					console.log("review");
+					//console.log("review");
 					varreview.querySelector("p").remove();
 					varreview.append(divele);
 				}
 				if(obj.status == ("pending")){
-					var reviewtask = document.createElement("button");
-					reviewtask.onclick = sendforreview ;
-					reviewtask.innerHTML = "Review Task";
 					//console.log("pending");
-					divele.append(reviewtask);
 					varpending.querySelector("p").remove();
 					varpending.append(divele);
 				}
@@ -270,36 +269,6 @@
         	// end of myFunction
         	
         	
-        	//start of sendforreview function
-        	function sendforreview(){
-        		var ele = this.parentNode;
-          		var hidinp = ele.querySelector("#hidinp");
-    	    	  console.log(hidinp);
-    	    	var taskid = hidinp.value;
-    	    	ajaxfunc(taskid)
-        	}
-        	
-        	// end of sendforreview
-        	
-        	
-        	// start of ajaxfunction
-        		function ajaxfunc(taskid){
-		      		var xhr = new XMLHttpRequest();
-					//request.open('POST' , '/agilemeetdash/editnotes');
-					
-					var data = "taskid=" + encodeURIComponent(taskid);
-					xhr.open("POST", '/agilemeetdash/reviewtask', true);
-					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-					xhr.onload = () =>{
-		
-						var data = xhr.responseText;	
-						console.log(data);
-						console.log("success");
-						location.reload();
-					}
-					xhr.send(data);
-		      	}
-        	//end of ajaxfunction
         	
       </script>
 

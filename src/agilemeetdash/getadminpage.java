@@ -21,8 +21,10 @@ public class getadminpage extends HttpServlet{
 		System.out.println(channelname);
 		ArrayList<String> noteslist = new ArrayList<String>();
 		JSONObject json = new JSONObject();
+		JSONObject json1 = new JSONObject();
 		JSONObject jsonlist = new JSONObject();
 		ArrayList<String> memberlist = new ArrayList<String>();
+		ArrayList<String> tasklist = new ArrayList<String>();
 		HttpSession session = req.getSession() ;
 		try {
 			Connection conn = databaseconn.initializeDatabase();
@@ -57,9 +59,23 @@ public class getadminpage extends HttpServlet{
 		    	// to add admin email to assign
 		    	memberlist.remove(adminemail);
 		    	
+		    	
+		    	Statement stmt1= conn.createStatement();
+				String sql1 = "SELECT * from assignedtask where channelname = '"  + channelname + "'";
+			    ResultSet rs1 = stmt1.executeQuery(sql1);
+
+			    while(rs1.next()) {
+				    	json1.put("taskid", rs1.getString(3));
+				    	json1.put("channelname", rs1.getString(1));
+				    	json1.put("duedate", rs1.getString(4));
+				    	json1.put("status", rs1.getString(5));
+			    		tasklist.add(json1.toString());
+			    	}
+		    	
 //		    	System.out.println(noteslist.toString());
 //		    	System.out.println(memberlist.toString());
 		    	
+			    req.setAttribute("tasklist", tasklist);
 		    	req.setAttribute("channelname" , channelname);
 			    req.setAttribute("noteslist", noteslist);
 			    req.setAttribute("memberlist",  memberlist);

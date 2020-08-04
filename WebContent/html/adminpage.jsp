@@ -123,7 +123,9 @@
               		</div>
               		
 					<p></p>
-					<form action='startmeeting'  method='GET'>
+					<% String channelname1 = (String) request.getAttribute("channelname"); %>
+					<form action='trackerpage'  method='POST'>
+						<input type="hidden" value="<%= channelname1 %>" name="channelname">
 						<button class='btn btn-outline-primary my-2 my-sm-0'  >Tracker</button>
 					</form>
 					<br>
@@ -135,9 +137,11 @@
 						
 					</div>
 					
+					<div id = "varreview">
+              			<h3>Your Review Tasks</h3>
+              			<p>You have not Review task</p>
+              		</div>
 					
-              		
-              		
               	</div>
               	</div>
               	
@@ -179,12 +183,33 @@
 			j = j + 1;
 			}
       	%>
+      	
+      	var tasklist = [];
+    	<%
+	      	ArrayList<String> tasklist = (ArrayList<String>) request.getAttribute("tasklist");
+    		int k = 0;
+			for( String task : tasklist){
+				
+    	%>
+    		tasklist[ <%= k %>] =  '<%= task %>' ;
+		<%
+			k = k + 1;
+			}
+    	%>
       	//console.log(memberlist);
       	
       	var channelname = '<%= channel %>';
       	//console.log(channelname);
       	
+      	var jsonnoteslist = [];
+    	noteslist.forEach(notestrtojson);
+    	
+    	function notestrtojson(item, index){
+    		jsonnoteslist.push(JSON.parse(item));
+    	}
+    	
       	noteslist.forEach(myFunction);
+      	tasklist.forEach(reviewfunction);
 
       	function myFunction(item, index) {
       		var obj = JSON.parse(item);
@@ -262,6 +287,63 @@
         	
         	document.getElementById('notescontenthere').append(divele);
       	}
+      	
+      	
+      	function reviewfunction(item, index) {
+      		var obj = JSON.parse(item);
+      		var divele = document.createElement('div');
+        	var inputele = document.createElement("INPUT");
+        	inputele.setAttribute("type", "hidden");
+        	inputele.setAttribute("value", obj.taskid);
+        	inputele.id = "hidinp" ;
+        	var note ;
+        	
+        	jsonnoteslist.forEach(getnote);
+        	
+        	function getnote(item, index){
+        		if(item.nodeid == obj.taskid) {
+        			console.log(item);
+        			note = item;
+        		}
+        	}
+        	//console.log("start");
+        	//console.log(obj);
+        	//console.log(note);
+        	//console.log("end");
+        	
+        	var title = document.createElement("h4");
+        	title.innerHTML = note.title ;
+        	var datetime = note.datetime;
+        	var spdate = datetime.split("T");
+        	var date = spdate[0];
+        	var time = spdate[1];
+        	time = time.substring(0, time.length - 5);
+        	
+        	var newpele = document.createElement("p");
+        	newpele.innerHTML = date + " " + time;
+        	
+        	divele.append(inputele);
+        	divele.append(title);
+        	
+        	
+        	divele.className = "messageclass"+ "l" + " btn-outline-primary";
+	    	var pele = document.createElement('h5');
+	    	pele.innerHTML = note.msgvalue;
+	    	divele.append(pele);
+	    	divele.append(newpele);
+	    	
+	    	divele.append(document.createElement("p"));
+	    	
+			if(obj.status == ("review")){
+				console.log("review");
+				varreview.querySelector("p").remove();
+				varreview.append(divele);
+			}
+	    	
+	    	//vardivele.append(divele);
+	        	
+	    	}
+      	
       	
       	function editcurrent(){
       		var ele = this.parentNode;
@@ -353,9 +435,7 @@
 
 			}
 			xhr.send(data);
-			
-			
-      		
+
       	}
       	
       </script>
